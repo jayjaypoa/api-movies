@@ -7,7 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 public class ApiMoviesUtil {
 
     public static int checkSeparatorPosition(String content) throws ApiMoviesException {
-        if(content.indexOf(ApiMoviesConfig.getSeparator(), 0) <= 0){
+        if(content.indexOf(ApiMoviesConfig.getSeparator(), 0) <= 0
+                || content.indexOf(ApiMoviesConfig.getSeparator(), 0) == (content.length()-1)) {
             throw new ApiMoviesException(EnumApiMoviesException.SEPARATOR_NOT_FOUND);
         } else {
             return content.indexOf(ApiMoviesConfig.getSeparator(), 0);
