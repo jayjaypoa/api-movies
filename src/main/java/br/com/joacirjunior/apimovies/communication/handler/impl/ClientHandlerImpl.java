@@ -8,6 +8,7 @@ import br.com.joacirjunior.apimovies.enumeration.EnumApiMoviesException;
 import br.com.joacirjunior.apimovies.exception.ApiMoviesException;
 import br.com.joacirjunior.apimovies.external.imdb.communication.ImdbCommunication;
 import br.com.joacirjunior.apimovies.external.imdb.dto.ImdbResponse;
+import br.com.joacirjunior.apimovies.logger.ApiMoviesConsoleLog;
 import br.com.joacirjunior.apimovies.util.ApiMoviesConfig;
 import br.com.joacirjunior.apimovies.validation.InputCommunicationValidate;
 import br.com.joacirjunior.apimovies.validation.OutputCommunicationValidate;
@@ -22,14 +23,20 @@ import java.util.Optional;
 
 public class ClientHandlerImpl implements ClientHandler {
 
+    private ApiMoviesConsoleLog logger;
+
     private ClientParser clientParser;
+
     private ImdbCommunication imdbCommunication;
+
     private Socket clientSocket;
 
     @Inject
-    public ClientHandlerImpl(ClientParser clientParser,
+    public ClientHandlerImpl(ApiMoviesConsoleLog logger,
+                             ClientParser clientParser,
                              ImdbCommunication imdbCommunication,
                              Socket clientSocket) {
+        this.logger = logger;
         this.clientParser = clientParser;
         this.imdbCommunication = imdbCommunication;
         this.clientSocket = clientSocket;
@@ -54,8 +61,7 @@ public class ClientHandlerImpl implements ClientHandler {
 
             // while receive message
             while ((content = input.readLine()) != null) {
-                System.out.printf("Sent from the client %s : %s\n",
-                        clientSocket.getInetAddress().getHostAddress(), content);
+                logger.info("Sent from the client " + clientSocket.getInetAddress().getHostAddress() + " : " + content);
                 try {
                     // validating input data
                     InputCommunicationValidate.inputValidate(content);
@@ -64,19 +70,19 @@ public class ClientHandlerImpl implements ClientHandler {
                     if(optRequest.isEmpty()){
                         throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
                     }
-                    System.out.println("Query : " + optRequest.get().toString());
+                    logger.info("Query : " + optRequest.get().toString());
                     // request to external partner
                     Optional<ImdbResponse> optResponse = imdbCommunication.searchMovie(optRequest.get().getContent());
                     if(optResponse.isEmpty()){
                         throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
                     }
-                    System.out.println("ImdbResponse : " + optResponse.get().toString());
+                    logger.info("ImdbResponse : " + optResponse.get().toString());
                     // parse the response from external partner
                     Optional<ApiMoviesResponse> optApiMoviesResponse = clientParser.createResponse(optResponse);
                     if(optApiMoviesResponse.isEmpty()){
                         throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
                     }
-                    System.out.println("Response object : " + optApiMoviesResponse.get().toString());
+                    logger.info("Response object : " + optApiMoviesResponse.get().toString());
                     // create output content
                     content = optApiMoviesResponse.get().getLength()
                             + String.valueOf(ApiMoviesConfig.getSeparator())
@@ -88,14 +94,15 @@ public class ClientHandlerImpl implements ClientHandler {
                     content = ex.getMessage().trim().length()
                             + String.valueOf(ApiMoviesConfig.getSeparator())
                             + ex.getMessage().trim();
+                    logger.error(content);
                 }
-                System.out.printf("Sending to %s : %s\n", clientSocket.getInetAddress().getHostAddress(), content);
+                logger.info("Sending to " + clientSocket.getInetAddress().getHostAddress() + " : " + content);
                 // send response for client
                 output.println(content);
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             try {
                 if (output != null)
@@ -104,7 +111,7 @@ public class ClientHandlerImpl implements ClientHandler {
                     input.close();
                 clientSocket.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
 
