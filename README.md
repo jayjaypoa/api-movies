@@ -20,7 +20,9 @@ The customer has requested a way to query for movie titles in [IMDB](https://www
     - [Sicario](https://sg.media-imdb.com/suggests/s/sicario.json)
     <br><br>
   - IMDB's URL return example :<br><br>
-![Example IMDB's URL return](https://i.imgur.com/nhq6bLU.png)  
+![Example IMDB's URL return](https://i.imgur.com/nhq6bLU.png)
+    <br><br>  
+  - After get these content, the application convert these for a object class and so filter to get just the movies titles. At the proccess finish, the application generate the response object with base at the output definition format.
 <br><br>
 #### 4. ANOTHER DETAILS :
 - [Guice](https://github.com/google/guice) for dependency injection
