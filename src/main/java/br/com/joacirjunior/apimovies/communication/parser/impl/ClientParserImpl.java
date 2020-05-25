@@ -32,11 +32,13 @@ public class ClientParserImpl implements ClientParser {
         if(!optImdbResponse.isEmpty()) {
             for(ImdbMovie movie : optImdbResponse.get().getMoviesData()){
                 if(movie.getIdentifier().startsWith("tt"))
-                    outputContent = outputContent.concat(movie.getTitle().concat(String.valueOf(ApiMoviesConfig.getTitleSeparator())));
+                    outputContent = outputContent.concat(
+                            movie.getTitle().concat(String.valueOf(ApiMoviesConfig.getTitleSeparator())));
             }
             return Optional.ofNullable(new ApiMoviesResponse(outputContent.length(), outputContent));
         } else {
             throw new ApiMoviesException(EnumApiMoviesException.PARSER_RESPONSE_ERROR);
         }
     }
+
 }

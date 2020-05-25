@@ -1,15 +1,17 @@
 package br.com.joacirjunior.apimovies.communication.handler.impl;
 
 import br.com.joacirjunior.apimovies.communication.handler.ClientHandler;
-import br.com.joacirjunior.apimovies.communication.parser.impl.ClientParserImpl;
+import br.com.joacirjunior.apimovies.communication.parser.ClientParser;
 import br.com.joacirjunior.apimovies.dto.ApiMoviesRequest;
 import br.com.joacirjunior.apimovies.dto.ApiMoviesResponse;
 import br.com.joacirjunior.apimovies.enumeration.EnumApiMoviesException;
 import br.com.joacirjunior.apimovies.exception.ApiMoviesException;
-import br.com.joacirjunior.apimovies.external.imdb.communication.impl.ImdbCommunicationImpl;
+import br.com.joacirjunior.apimovies.external.imdb.communication.ImdbCommunication;
 import br.com.joacirjunior.apimovies.external.imdb.dto.ImdbResponse;
 import br.com.joacirjunior.apimovies.util.ApiMoviesConfig;
 import br.com.joacirjunior.apimovies.validation.InputCommunicationValidate;
+import br.com.joacirjunior.apimovies.validation.OutputCommunicationValidate;
+import com.google.inject.Inject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,9 +22,21 @@ import java.util.Optional;
 
 public class ClientHandlerImpl implements ClientHandler {
 
+    private ClientParser clientParser;
+    private ImdbCommunication imdbCommunication;
     private Socket clientSocket;
 
-    public ClientHandlerImpl(Socket clientSocket) {
+    @Inject
+    public ClientHandlerImpl(ClientParser clientParser,
+                             ImdbCommunication imdbCommunication,
+                             Socket clientSocket) {
+        this.clientParser = clientParser;
+        this.imdbCommunication = imdbCommunication;
+        this.clientSocket = clientSocket;
+    }
+
+    @Inject
+    public void setClientSocket(Socket clientSocket){
         this.clientSocket = clientSocket;
     }
 
@@ -40,27 +54,25 @@ public class ClientHandlerImpl implements ClientHandler {
 
             // while receive message
             while ((content = input.readLine()) != null) {
-                System.out.printf("Sent from the client: %s\n", content);
+                System.out.printf("Sent from the client %s : %s\n",
+                        clientSocket.getInetAddress().getHostAddress(), content);
                 try {
                     // validating input data
                     InputCommunicationValidate.inputValidate(content);
                     // identify query from input data
-                    Optional<ApiMoviesRequest> optRequest =
-                            new ClientParserImpl().createRequest(Optional.ofNullable(content));
+                    Optional<ApiMoviesRequest> optRequest = clientParser.createRequest(Optional.ofNullable(content));
                     if(optRequest.isEmpty()){
                         throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
                     }
                     System.out.println("Query : " + optRequest.get().toString());
                     // request to external partner
-                    Optional<ImdbResponse> optResponse =
-                            new ImdbCommunicationImpl().searchMovie(optRequest.get().getContent());
+                    Optional<ImdbResponse> optResponse = imdbCommunication.searchMovie(optRequest.get().getContent());
                     if(optResponse.isEmpty()){
                         throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
                     }
                     System.out.println("ImdbResponse : " + optResponse.get().toString());
                     // parse the response from external partner
-                    Optional<ApiMoviesResponse> optApiMoviesResponse =
-                            new ClientParserImpl().createResponse(optResponse);
+                    Optional<ApiMoviesResponse> optApiMoviesResponse = clientParser.createResponse(optResponse);
                     if(optApiMoviesResponse.isEmpty()){
                         throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
                     }
@@ -69,11 +81,15 @@ public class ClientHandlerImpl implements ClientHandler {
                     content = optApiMoviesResponse.get().getLength()
                             + String.valueOf(ApiMoviesConfig.getSeparator())
                             + optApiMoviesResponse.get().getContent();
+                    // validating output data
+                    OutputCommunicationValidate.outputValidate(content);
                 } catch (ApiMoviesException ex){
                     // create error output
                     content = ex.getMessage().trim().length()
-                            + String.valueOf(ApiMoviesConfig.getSeparator()) + ex.getMessage().trim();
+                            + String.valueOf(ApiMoviesConfig.getSeparator())
+                            + ex.getMessage().trim();
                 }
+                System.out.printf("Sending to %s : %s\n", clientSocket.getInetAddress().getHostAddress(), content);
                 // send response for client
                 output.println(content);
             }

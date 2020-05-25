@@ -47,7 +47,7 @@ public class ApiMoviesBaseDTO {
 
     @Override
     public String toString() {
-        return "ApiMoviesBaseModel{" +
+        return "ApiMoviesBaseDTO{" +
                 "length=" + length +
                 ", content='" + content + '\'' +
                 '}';

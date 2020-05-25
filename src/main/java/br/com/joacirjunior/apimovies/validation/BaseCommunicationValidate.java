@@ -2,7 +2,6 @@ package br.com.joacirjunior.apimovies.validation;
 
 import br.com.joacirjunior.apimovies.enumeration.EnumApiMoviesException;
 import br.com.joacirjunior.apimovies.exception.ApiMoviesException;
-import br.com.joacirjunior.apimovies.util.ApiMoviesConfig;
 import br.com.joacirjunior.apimovies.util.ApiMoviesUtil;
 import org.apache.commons.lang3.StringUtils;
 
