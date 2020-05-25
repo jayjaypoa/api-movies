@@ -1,9 +1,33 @@
 plugins {
-    id 'java'
+    id 'application'
 }
 
 group 'br.com.joacirjunior'
 version '1.0-SNAPSHOT'
+
+apply plugin : "java"
+ext {
+    javaMainClass = "br.com.joacirjunior.apimovies.ApiMoviesApplication"
+}
+
+application {
+    mainClassName = javaMainClass
+}
+
+jar {
+    manifest {
+        attributes(
+            "Main-Class": javaMainClass
+        )
+    }
+}
+
+task runWithExecJarExecutable(type: Exec) {
+    dependsOn jar
+    group = "Execution"
+    description = "Run the output executable jar with ExecTask"
+    commandLine "java", "-jar", jar.archiveFile.get()
+}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -16,7 +40,6 @@ repositories {
 
 dependencies {
     compile group: 'com.google.inject', name: 'guice', version: '4.0'
-//    compile group: 'com.google.inject.extensions', name: 'guice-servlet', version: '3.0'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
     compile group: 'log4j', name: 'log4j', version: '1.2.17'
