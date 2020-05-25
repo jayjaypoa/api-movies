@@ -167,3 +167,14 @@ You can run it like this:
 ```
 JUST ATTENTION FOR YOUR JAVA VERSION. The project use Java version 11.<br>
 The *gradle.build* file explicit the Java version.
+
+
+<br><br>
+
+# Project : api-movies-client
+## CLIENT PROJECT 
+#### 1. OBJECTIVE :
+ATTENTION : THIS CLIENT PROJECT IS JUST FOR TEST THE SERVER RESPONSE.<br>
+THIS PROJECT DON'T LOOK FOR HAVE A GOOD PRACTICES LIKE DESIGN PATTERN OR A UNIT TESTS COVERAGE.<br>
+THE ONLY OBJECTIVE IS CALL THE SERVER PROJECT (api-movies-server).
+<br><br>
