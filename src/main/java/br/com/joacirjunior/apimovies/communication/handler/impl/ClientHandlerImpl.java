@@ -50,21 +50,21 @@ public class ClientHandlerImpl implements ClientHandler {
                     if(optRequest.isEmpty()){
                         throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
                     }
-System.out.println("optRequest.get() ----------> " + optRequest.get().toString());
+                    System.out.println("Query : " + optRequest.get().toString());
                     // request to external partner
                     Optional<ImdbResponse> optResponse =
                             new ImdbCommunicationImpl().searchMovie(optRequest.get().getContent());
                     if(optResponse.isEmpty()){
                         throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
                     }
-System.out.println("optResponse.get() ----------> " + optResponse.get().toString());
+                    System.out.println("ImdbResponse : " + optResponse.get().toString());
                     // parse the response from external partner
                     Optional<ApiMoviesResponse> optApiMoviesResponse =
                             new ClientParserImpl().createResponse(optResponse);
                     if(optApiMoviesResponse.isEmpty()){
                         throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
                     }
-System.out.println("optApiMoviesResponse.get() ----------> " + optApiMoviesResponse.get().toString());
+                    System.out.println("Response object : " + optApiMoviesResponse.get().toString());
                     // create output content
                     content = optApiMoviesResponse.get().getLength()
                             + String.valueOf(ApiMoviesConfig.getSeparator())
