@@ -24,11 +24,8 @@ import java.util.Optional;
 public class ClientHandlerImpl implements ClientHandler {
 
     private ApiMoviesConsoleLog logger;
-
     private ClientParser clientParser;
-
     private ImdbCommunication imdbCommunication;
-
     private Socket clientSocket;
 
     @Inject

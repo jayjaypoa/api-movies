@@ -8,7 +8,6 @@ public enum EnumApiMoviesException {
     FATAL_ERROR("ERR-0000", "API-MOVIES", "ERROR", "FATAL ERROR", "Fatal error"),
     GENERIC_ERROR("ERR-0001", "API-MOVIES", "GENERIC ERROR", "GENERIC ERROR", "Generic error"),
 
-
     // SOCKET
     SOCKET_GENERATE_ERROR("ERR-1000", "API-MOVIES", "ERROR", "SERVER SOCKET GENERATE", "Socket generate error"),
     SOCKET_ACCEPT_ERROR("ERR-1001", "API-MOVIES", "ERROR", "SOCKET ACCEPT", "Socket accept error"),
@@ -33,7 +32,10 @@ public enum EnumApiMoviesException {
     PARTNER_CALL_ERROR("ERR-5000", "API-MOVIES", "ERROR", "PARTNER CALL", "Error calling the partner"),
     PARTNER_URL_ERROR("ERR-5001", "API-MOVIES", "ERROR", "PARTNER URL", "Error defining the partner URL"),
     PARTNER_MAPPER_ERROR("ERR-5002", "API-MOVIES", "ERROR", "PARTNER MAPPER", "Mapper error"),
-    PARTNER_MOVIE_NOT_FOUND("ERR-5003", "API-MOVIES", "NOT_FOUND", "MOVIE", "Movie not found");
+    PARTNER_MOVIE_NOT_FOUND("ERR-5003", "API-MOVIES", "NOT_FOUND", "MOVIE", "Movie not found"),
+
+    // ENCODER
+    URL_ENCODER_ERROR("ERR-6000", "API-MOVIES", "ERROR", "URL", "URL encoder error");
 
     private String code;
     private String origin;

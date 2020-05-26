@@ -6,8 +6,9 @@ import br.com.joacirjunior.apimovies.external.imdb.communication.ImdbCommunicati
 import br.com.joacirjunior.apimovies.external.imdb.dto.ImdbMovie;
 import br.com.joacirjunior.apimovies.external.imdb.dto.ImdbResponse;
 import br.com.joacirjunior.apimovies.external.imdb.mapper.ImdbResponseMapper;
+import br.com.joacirjunior.apimovies.logger.ApiMoviesConsoleLog;
 import br.com.joacirjunior.apimovies.util.ApiMoviesUtil;
-import org.apache.commons.lang3.StringUtils;
+import com.google.inject.Inject;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -19,20 +20,21 @@ import java.util.stream.Collectors;
 
 public class ImdbCommunicationImpl implements ImdbCommunication {
 
+    private ApiMoviesConsoleLog logger;
+
     private static int IMDB_TIMEOUT = 5000;
-
     private static String IMDB_FIRST_LETTER_IDENTIFIER = "$FIRST_LETTER";
-
     private static String IMDB_TITLE_IDENTIFIER = "$MOVIE_TITLE";
-
     private static String IMDB_URL_SEARCH = "https://sg.media-imdb.com/suggests/"
             + IMDB_FIRST_LETTER_IDENTIFIER + "/" + IMDB_TITLE_IDENTIFIER + ".json";
-
     private static String IMDB_MOVIE_IDENTIFIER_START_WITH = "tt";
-
     private static String IMDB_RESPONSE_INITIAL = "(";
-
     private static String IMDB_RESPONSE_FINAL = ")";
+
+    @Inject
+    public ImdbCommunicationImpl(ApiMoviesConsoleLog logger) {
+        this.logger = logger;
+    }
 
     @Override
     public Optional<ImdbResponse> searchMovie(String title) throws ApiMoviesException {
@@ -78,11 +80,11 @@ public class ImdbCommunicationImpl implements ImdbCommunication {
                     optResult = Optional.ofNullable(new StringBuffer().append(streamReader.toString()));
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.error(EnumApiMoviesException.PARTNER_CALL_ERROR, ex.getMessage());
                 throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
             }
         } catch (Exception ioe){
-            ioe.printStackTrace();
+            logger.error(EnumApiMoviesException.PARTNER_CALL_ERROR, ioe.getMessage());
             throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
         } finally {
             connection.disconnect();
@@ -104,8 +106,9 @@ public class ImdbCommunicationImpl implements ImdbCommunication {
         try {
             String url = IMDB_URL_SEARCH.replace(IMDB_FIRST_LETTER_IDENTIFIER,
                     String.valueOf(ApiMoviesUtil.getFirstLetter(title)));
-            return new URL(url.replace(IMDB_TITLE_IDENTIFIER, this.normalizeMovieTitle(title)));
+            return new URL(url.replace(IMDB_TITLE_IDENTIFIER, ApiMoviesUtil.encodeValue(title)));
         } catch (Exception ex){
+            logger.error(EnumApiMoviesException.PARTNER_URL_ERROR, ex.getMessage());
             throw new ApiMoviesException(EnumApiMoviesException.PARTNER_URL_ERROR);
         }
     }
@@ -119,13 +122,6 @@ public class ImdbCommunicationImpl implements ImdbCommunication {
         }
         in.close();
         return Optional.ofNullable(content);
-    }
-
-    private String normalizeMovieTitle(String title) throws ApiMoviesException {
-        if(StringUtils.isNotBlank(title)) {
-            return title.replaceAll(" ", "%20");
-        }
-        throw new ApiMoviesException(EnumApiMoviesException.GENERIC_ERROR);
     }
 
 }
