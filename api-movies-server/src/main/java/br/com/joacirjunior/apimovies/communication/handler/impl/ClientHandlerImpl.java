@@ -7,7 +7,7 @@ import br.com.joacirjunior.apimovies.dto.ApiMoviesResponse;
 import br.com.joacirjunior.apimovies.enumeration.EnumApiMoviesException;
 import br.com.joacirjunior.apimovies.exception.ApiMoviesException;
 import br.com.joacirjunior.apimovies.external.imdb.communication.ImdbCommunication;
-import br.com.joacirjunior.apimovies.external.imdb.dto.ImdbResponse;
+import br.com.joacirjunior.apimovies.external.imdb.model.ImdbResponse;
 import br.com.joacirjunior.apimovies.logger.ApiMoviesConsoleLog;
 import br.com.joacirjunior.apimovies.util.ApiMoviesConfig;
 import br.com.joacirjunior.apimovies.validation.InputCommunicationValidate;
@@ -63,38 +63,19 @@ public class ClientHandlerImpl implements ClientHandler {
                     // validating input data
                     InputCommunicationValidate.inputValidate(content);
                     // identify query from input data
-                    Optional<ApiMoviesRequest> optRequest = clientParser.createRequest(Optional.ofNullable(content));
-                    if(optRequest.isEmpty()){
-                        throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
-                    }
-                    logger.info("Query : " + optRequest.get().toString());
-                    // request to external partner
-                    Optional<ImdbResponse> optResponse = imdbCommunication.searchMovie(optRequest.get().getContent());
-                    if(optResponse.isEmpty()){
-                        throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
-                    }
-                    logger.info("ImdbResponse : " + optResponse.get().toString());
-                    // parse the response from external partner
-                    Optional<ApiMoviesResponse> optApiMoviesResponse = clientParser.createResponse(optResponse);
-                    if(optApiMoviesResponse.isEmpty()){
-                        throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
-                    }
-                    logger.info("Response object : " + optApiMoviesResponse.get().toString());
-                    // create output content
-                    content = optApiMoviesResponse.get().getLength()
-                            + String.valueOf(ApiMoviesConfig.getSeparator())
-                            + optApiMoviesResponse.get().getContent();
+                    Optional<ApiMoviesRequest> optRequest = this.identifyRequest(content);
+                    // call to the partner
+                    Optional<ImdbResponse> optResponse = this.requestExternalPartner(optRequest);
+                    // convert to response object format
+                    content = this.parseExternalPartnerRespone(optResponse);
                     // validating output data
                     OutputCommunicationValidate.outputValidate(content);
                 } catch (ApiMoviesException ex){
                     // create error output
-                    content = ex.getMessage().trim().length()
-                            + String.valueOf(ApiMoviesConfig.getSeparator())
-                            + ex.getMessage().trim();
-                    logger.error(content);
+                    logger.error(ex.getMessage().trim().length() + String.valueOf(ApiMoviesConfig.getSeparator())
+                            + ex.getMessage().trim());
                 }
-                logger.info("Sending to " + clientSocket.getInetAddress().getHostAddress() + " : " + content);
-                // send response for client
+                logger.info("Sending response to " + clientSocket.getInetAddress().getHostAddress() + " : " + content);
                 output.println(content);
             }
 
@@ -112,6 +93,51 @@ public class ClientHandlerImpl implements ClientHandler {
             }
         }
 
+    }
+
+    /**
+     * Identify query from input data
+     *
+     * */
+    private Optional<ApiMoviesRequest> identifyRequest(String content) throws ApiMoviesException {
+        Optional<ApiMoviesRequest> optRequest = clientParser.createRequest(Optional.ofNullable(content));
+        if(optRequest.isEmpty()){
+            logger.error(EnumApiMoviesException.PARTNER_CALL_ERROR, "IS EMPTY");
+            throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
+        }
+        logger.info("Query : " + optRequest.get().toString());
+        return optRequest;
+    }
+
+    /**
+     * Request to external partner (Imdb).
+     *
+     * */
+    private Optional<ImdbResponse> requestExternalPartner(Optional<ApiMoviesRequest> optRequest) throws ApiMoviesException {
+        Optional<ImdbResponse> optResponse = imdbCommunication.searchByMovieTitle(optRequest.get().getContent());
+        if(optResponse.isEmpty()){
+            logger.error(EnumApiMoviesException.PARTNER_CALL_ERROR, "IS EMPTY");
+            throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
+        }
+        logger.info("External partner response : " + optResponse.get().toString());
+        return optResponse;
+    }
+
+    /**
+     * Parse the response from external partner (Imdb).
+     *
+     * */
+    private String parseExternalPartnerRespone(Optional<ImdbResponse> optResponse) throws ApiMoviesException {
+        Optional<ApiMoviesResponse> optApiMoviesResponse = clientParser.createResponse(optResponse);
+        if(optApiMoviesResponse.isEmpty()){
+            logger.error(EnumApiMoviesException.PARTNER_CALL_ERROR, "IS EMPTY");
+            throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
+        }
+        logger.info("Response object : " + optApiMoviesResponse.get().toString());
+        // create output content
+        return optApiMoviesResponse.get().getLength()
+                + String.valueOf(ApiMoviesConfig.getSeparator())
+                + optApiMoviesResponse.get().getContent();
     }
 
 }

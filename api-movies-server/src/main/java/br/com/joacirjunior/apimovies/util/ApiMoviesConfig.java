@@ -3,11 +3,8 @@ package br.com.joacirjunior.apimovies.util;
 public class ApiMoviesConfig {
 
     private static final int PORT_NUMBER = 32000;
-
     private static final boolean ALLOWED_ADDRESS_REUSE = true;
-
     private static final char SEPARATOR = ':';
-
     private static final String TITLE_SEPARATOR = "\\n";
 
     public ApiMoviesConfig(){

@@ -1,7 +1,6 @@
 package br.com.joacirjunior.apimovies.dummydata;
 
-import br.com.joacirjunior.apimovies.external.imdb.dto.ImdbMovie;
-import br.com.joacirjunior.apimovies.external.imdb.dto.ImdbResponse;
+import br.com.joacirjunior.apimovies.external.imdb.model.ImdbMovie;
 
 import java.util.ArrayList;
 import java.util.List;
