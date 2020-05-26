@@ -6,6 +6,7 @@ import br.com.joacirjunior.apimovies.dto.ApiMoviesResponse;
 import br.com.joacirjunior.apimovies.dummydata.DummyDataForTests;
 import br.com.joacirjunior.apimovies.exception.ApiMoviesException;
 import br.com.joacirjunior.apimovies.external.imdb.model.ImdbMovie;
+import br.com.joacirjunior.apimovies.external.imdb.model.ImdbResponse;
 import br.com.joacirjunior.apimovies.util.ApiMoviesConfig;
 import com.google.inject.Inject;
 import org.junit.Assert;
@@ -58,7 +59,7 @@ public class ClientParserTests extends ApiMoviesBaseTests {
         Optional<ImdbResponse> optImdbResponse = Optional.ofNullable(imdbResponse);
         Optional<ApiMoviesResponse> opt = clientParser.createResponse(optImdbResponse);
         String expected = "";
-        for(ImdbMovie imdbMovie : imdbResponse.getMoviesData()){
+        for(ImdbMovie imdbMovie : imdbResponse.getMovies()){
             expected = expected + imdbMovie.getTitle() + ApiMoviesConfig.getTitleSeparator();
         }
         Assert.assertEquals(String.valueOf(expected.length()), opt.get().getLength().toString());
