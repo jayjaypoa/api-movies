@@ -8,19 +8,16 @@ The customer has requested a way to query for movie titles in [IMDB](https://www
 - [Guice](https://github.com/google/guice) (*version 4.0*)
 - [Gradle](https://docs.gradle.org/6.1.1/release-notes.html) (version 6.1.1)
 - [Apache Commons](https://commons.apache.org/) (*version 3.0*)
-- [Gson](https://github.com/google/gson) (*version 2.7*)
+- [JSoup](https://jsoup.org/) (*version 1.3.1*)
 - [Log4J](https://logging.apache.org/log4j/2.x/) (*version 1.2.17*)
 - [JUnit](https://junit.org/) (*version 4.12*)
 <br><br>
 #### 3. TECHNICAL DETAILS :
-- The IMDB's URL return like a json for the application
+- The IMDB's HTML is parsed with JSoup.
   - URL's examples :
-    - [Titanic](https://sg.media-imdb.com/suggests/t/titanic.json)
-    - [O Poderoso Chefão](https://sg.media-imdb.com/suggests/o/o%20poderoso%20chef%C3%A3o.json)
-    - [Sicario](https://sg.media-imdb.com/suggests/s/sicario.json)
-    <br><br>
-  - IMDB's URL return example :<br><br>
-![Example IMDB's URL return](https://i.imgur.com/nhq6bLU.png)
+    - [Titanic](https://www.imdb.com/find?s=tt&q=Titanic&ref_=nv_sr_sm)
+    - [O Poderoso Chefão](https://www.imdb.com/find?s=tt&q=O+Poderoso+Chef%C3%A3o&ref_=nv_sr_sm)
+    - [Sicario](https://www.imdb.com/find?s=tt&q=sicario&ref_=nv_sr_sm)
     <br><br>  
   - After get these content, the application convert these for a object class and so filter to get just the movies titles. At the proccess finish, the application generate the response object with base at the output definition format.
 <br><br>
@@ -42,7 +39,8 @@ The customer has requested a way to query for movie titles in [IMDB](https://www
 <br><br>
 #### 6. OUTPUT/RESPONSE FORMAT :
 - The response is a movie title list in String format
-- Each movie title was separated with LF (\n)
+- Each movie title was separated with LF (\n).
+- The application contabilize the movie separator - LF (\n) - at the response length.
 - The protocol is text and the response is with this format :  
 ```text
 <payload_length>:<payload>
@@ -171,10 +169,15 @@ The *gradle.build* file explicit the Java version.
 
 <br><br>
 
-# Project : api-movies-client
-## CLIENT PROJECT 
-#### 1. OBJECTIVE :
+# CALLING THE SERVER
+At below, two possibilities - just sugestion - for get the server response.<br>
+## 1. RUNNING THE CLIENT PROJECT (api-movies-client)
+#### 1.1. OBJECTIVE :
 ATTENTION : THIS CLIENT PROJECT IS JUST FOR TEST THE SERVER RESPONSE.<br>
 THIS PROJECT DON'T LOOK FOR HAVE A GOOD PRACTICES LIKE DESIGN PATTERN OR A UNIT TESTS COVERAGE.<br>
 THE ONLY OBJECTIVE IS CALL THE SERVER PROJECT (api-movies-server).
 <br><br>
+
+## 2. TELNET
+#### 2.1 EXAMPLE:
+![Telnet Example](https://i.imgur.com/TJ4F29z.png)
