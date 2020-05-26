@@ -1,9 +1,33 @@
 plugins {
-    id 'java'
+    id 'application'
 }
 
 group 'br.com.joacirjunior'
-version '1.0-SNAPSHOT'
+version '1.0-CLIENT-SNAPSHOT'
+
+apply plugin : "java"
+ext {
+    javaMainClass = "br.com.joacirjunior.apimovies.client.ApiMoviesClientApplication"
+}
+
+application {
+    mainClassName = javaMainClass
+}
+
+jar {
+    manifest {
+        attributes(
+                "Main-Class": javaMainClass
+        )
+    }
+}
+
+task runWithExecJarExecutable(type: Exec) {
+    dependsOn jar
+    group = "Execution"
+    description = "Run the output executable jar with ExecTask"
+    commandLine "java", "-jar", jar.archiveFile.get()
+}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
