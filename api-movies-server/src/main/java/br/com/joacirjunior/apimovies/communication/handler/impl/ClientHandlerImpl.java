@@ -46,39 +46,12 @@ public class ClientHandlerImpl implements ClientHandler {
 
     @Override
     public void run() {
-
-        String content = "";
-        PrintWriter output = null;
         BufferedReader input = null;
-
+        PrintWriter output = null;
         try {
-
             output = new PrintWriter(clientSocket.getOutputStream(), true);
             input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
-            // while receive message
-            while ((content = input.readLine()) != null) {
-                logger.info("Sent from the client " + clientSocket.getInetAddress().getHostAddress() + " : " + content);
-                try {
-                    // validating input data
-                    InputCommunicationValidate.inputValidate(content);
-                    // identify query from input data
-                    Optional<ApiMoviesRequest> optRequest = this.identifyRequest(content);
-                    // call to the partner
-                    Optional<ImdbResponse> optResponse = this.requestExternalPartner(optRequest);
-                    // convert to response object format
-                    content = this.parseExternalPartnerRespone(optResponse);
-                    // validating output data
-                    OutputCommunicationValidate.outputValidate(content);
-                } catch (ApiMoviesException ex){
-                    // create error output
-                    logger.error(ex.getMessage().trim().length() + String.valueOf(ApiMoviesConfig.getSeparator())
-                            + ex.getMessage().trim());
-                }
-                logger.info("Sending response to " + clientSocket.getInetAddress().getHostAddress() + " : " + content);
-                output.println(content);
-            }
-
+            this.proccessWhileReceiveMessage(input, output);
         } catch (IOException e) {
             logger.error(e.getMessage());
         } finally {
@@ -93,6 +66,35 @@ public class ClientHandlerImpl implements ClientHandler {
             }
         }
 
+    }
+
+
+    /**
+     * Execute the proccess
+     *
+     * */
+    private void proccessWhileReceiveMessage(BufferedReader input, PrintWriter output) throws IOException {
+        String content = "";
+        while ((content = input.readLine()) != null) {
+            logger.info("Sent from the client " + clientSocket.getInetAddress().getHostAddress() + " : " + content);
+            try {
+                // validating input data
+                InputCommunicationValidate.inputValidate(content);
+                // identify query from input data
+                Optional<ApiMoviesRequest> optRequest = this.identifyRequest(content);
+                // call to the partner
+                Optional<ImdbResponse> optResponse = this.requestExternalPartner(optRequest);
+                // convert to response object format
+                content = this.parseExternalPartnerRespone(optResponse);
+                // validating output data
+                OutputCommunicationValidate.outputValidate(content);
+            } catch (ApiMoviesException ex){
+                // create error output
+                content = ex.getMessage().length() + String.valueOf(ApiMoviesConfig.getSeparator()) + ex.getMessage();
+            }
+            logger.info("Sending response to " + clientSocket.getInetAddress().getHostAddress() + " : " + content);
+            output.println(content);
+        }
     }
 
     /**
@@ -116,8 +118,8 @@ public class ClientHandlerImpl implements ClientHandler {
     private Optional<ImdbResponse> requestExternalPartner(Optional<ApiMoviesRequest> optRequest) throws ApiMoviesException {
         Optional<ImdbResponse> optResponse = imdbCommunication.searchByMovieTitle(optRequest.get().getContent());
         if(optResponse.isEmpty()){
-            logger.error(EnumApiMoviesException.PARTNER_CALL_ERROR, "IS EMPTY");
-            throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
+            logger.error(EnumApiMoviesException.PARTNER_MOVIE_NOT_FOUND, "MOVIE NOT FOUND");
+            throw new ApiMoviesException(EnumApiMoviesException.PARTNER_MOVIE_NOT_FOUND);
         }
         logger.info("External partner response : " + optResponse.get().toString());
         return optResponse;

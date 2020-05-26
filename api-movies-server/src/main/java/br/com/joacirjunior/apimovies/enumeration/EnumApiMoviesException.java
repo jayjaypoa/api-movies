@@ -22,7 +22,6 @@ public enum EnumApiMoviesException {
     INVALID_OUTPUT_VALIDATION("ERR-3001", "API-MOVIES", "VALIDATION", "OUTPUT", "Invalid output"),
     INVALID_LENGTH_VALIDATION("ERR-3002", "API-MOVIES", "VALIDATION", "LENGHT", "Invalid length"),
     INVALID_SEPARATOR_VALIDATION("ERR-3003", "API-MOVIES", "VALIDATION", "SEPARATOR", "Separator validation error"),
-    SEPARATOR_NOT_FOUND("ERR-3004", "API-MOVIES", "NOT_FOUND", "SEPARATOR", "Separator not found"),
 
     // MODEL
     PARSER_REQUEST_ERROR("ERR-4000", "API-MOVIES", "ERROR", "PARSER REQUEST", "Request error"),
