@@ -5,6 +5,6 @@ import br.com.joacirjunior.apimovies.exception.ApiMoviesException;
 import com.google.inject.ImplementedBy;
 
 @ImplementedBy(ApiMoviesServerImpl.class)
-public interface ApiMoviesServer {
+public interface ApiMoviesServer extends Runnable {
     void execute() throws ApiMoviesException;
 }

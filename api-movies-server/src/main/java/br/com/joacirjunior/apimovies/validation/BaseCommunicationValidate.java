@@ -28,12 +28,11 @@ public class BaseCommunicationValidate {
     private static void verifyValidLength(String content) throws ApiMoviesException {
         int position = ApiMoviesUtil.checkSeparatorPosition(content);
         try {
-            Integer length = Integer.parseInt(content.substring(0, position));
-            if (length > 0) {
-                if(content.substring(position+1, (length + position + 1)).length() != length){
-                    throw new ApiMoviesException(EnumApiMoviesException.INVALID_LENGTH_VALIDATION);
-                }
-            } else {
+            int size = Integer.parseInt(content.substring(0, position).trim());
+            int lengthLastPart = content.substring(position+1).trim().length();
+            if ( size <= 0
+                    || lengthLastPart <= 0
+                    || (lengthLastPart > 0 && size != lengthLastPart)) {
                 throw new ApiMoviesException(EnumApiMoviesException.INVALID_LENGTH_VALIDATION);
             }
         } catch (NumberFormatException | StringIndexOutOfBoundsException ex){

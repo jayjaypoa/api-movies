@@ -3,7 +3,7 @@ package br.com.joacirjunior.apimovies.external.imdb.parser.impl;
 import br.com.joacirjunior.apimovies.external.imdb.model.ImdbMovie;
 import br.com.joacirjunior.apimovies.external.imdb.model.ImdbResponse;
 import br.com.joacirjunior.apimovies.external.imdb.parser.ImdbParser;
-import br.com.joacirjunior.apimovies.logger.ApiMoviesConsoleLog;
+import br.com.joacirjunior.apimovies.logger.ApiMoviesCustomLog;
 import com.google.inject.Inject;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -14,14 +14,15 @@ import java.util.Optional;
 
 public class ImdbParserImpl implements ImdbParser {
 
-    private ApiMoviesConsoleLog logger;
+    private ApiMoviesCustomLog logger;
 
     @Inject
-    public ImdbParserImpl(ApiMoviesConsoleLog logger) {
+    public ImdbParserImpl(ApiMoviesCustomLog logger) {
         this.logger = logger;
     }
 
     public Optional<ImdbResponse> parserImdbContent(Document document) {
+        logger.info("Parsing IMDB response...");
         Elements resultText = document.select("td.result_text");
         if(!resultText.isEmpty()){
             List<ImdbMovie> list = new ArrayList<>();
@@ -35,10 +36,9 @@ public class ImdbParserImpl implements ImdbParser {
                 ImdbMovie movie = new ImdbMovie(movieTitle, movieIdentifier, movieLink);
                 if(!list.contains(movie)){
                     list.add(movie);
-                    logger.info("Movie added : " + movie.toString());
                 }
             });
-            logger.info("Movies counter : " + list.size());
+            logger.info("Parse completed");
             return Optional.ofNullable(new ImdbResponse(list));
         }
         return Optional.empty();

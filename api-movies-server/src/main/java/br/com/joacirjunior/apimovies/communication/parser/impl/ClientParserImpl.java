@@ -7,7 +7,7 @@ import br.com.joacirjunior.apimovies.enumeration.EnumApiMoviesException;
 import br.com.joacirjunior.apimovies.exception.ApiMoviesException;
 import br.com.joacirjunior.apimovies.external.imdb.model.ImdbMovie;
 import br.com.joacirjunior.apimovies.external.imdb.model.ImdbResponse;
-import br.com.joacirjunior.apimovies.logger.ApiMoviesConsoleLog;
+import br.com.joacirjunior.apimovies.logger.ApiMoviesCustomLog;
 import br.com.joacirjunior.apimovies.util.ApiMoviesConfig;
 import br.com.joacirjunior.apimovies.util.ApiMoviesUtil;
 import com.google.inject.Inject;
@@ -15,13 +15,6 @@ import com.google.inject.Inject;
 import java.util.Optional;
 
 public class ClientParserImpl implements ClientParser {
-
-    private ApiMoviesConsoleLog logger;
-
-    @Inject
-    public ClientParserImpl(ApiMoviesConsoleLog logger) {
-        this.logger = logger;
-    }
 
     @Override
     public Optional<ApiMoviesRequest> createRequest(Optional<String> optRequestContent) throws ApiMoviesException {
@@ -38,7 +31,6 @@ public class ClientParserImpl implements ClientParser {
     @Override
     public Optional<ApiMoviesResponse> createResponse(Optional<ImdbResponse> optImdbResponse) throws ApiMoviesException {
         if(!optImdbResponse.isEmpty()) {
-            logger.info("Creating response object");
             String outputContent = "";
             for(ImdbMovie movie : optImdbResponse.get().getMovies()){
                 outputContent = outputContent.concat(
@@ -46,7 +38,6 @@ public class ClientParserImpl implements ClientParser {
             }
             return Optional.ofNullable(new ApiMoviesResponse(outputContent.length(), outputContent));
         } else {
-            logger.error(EnumApiMoviesException.PARSER_RESPONSE_ERROR);
             throw new ApiMoviesException(EnumApiMoviesException.PARSER_RESPONSE_ERROR);
         }
     }

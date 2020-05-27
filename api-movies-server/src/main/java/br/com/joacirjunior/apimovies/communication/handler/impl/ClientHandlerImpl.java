@@ -8,92 +8,67 @@ import br.com.joacirjunior.apimovies.enumeration.EnumApiMoviesException;
 import br.com.joacirjunior.apimovies.exception.ApiMoviesException;
 import br.com.joacirjunior.apimovies.external.imdb.communication.ImdbCommunication;
 import br.com.joacirjunior.apimovies.external.imdb.model.ImdbResponse;
-import br.com.joacirjunior.apimovies.logger.ApiMoviesConsoleLog;
+import br.com.joacirjunior.apimovies.logger.ApiMoviesCustomLog;
 import br.com.joacirjunior.apimovies.util.ApiMoviesConfig;
 import br.com.joacirjunior.apimovies.validation.InputCommunicationValidate;
 import br.com.joacirjunior.apimovies.validation.OutputCommunicationValidate;
 import com.google.inject.Inject;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Optional;
 
 public class ClientHandlerImpl implements ClientHandler {
 
-    private ApiMoviesConsoleLog logger;
-    private ClientParser clientParser;
-    private ImdbCommunication imdbCommunication;
-    private Socket clientSocket;
+    private final ClientParser clientParser;
+    private final ImdbCommunication imdbCommunication;
+    private final ApiMoviesCustomLog logger;
 
     @Inject
-    public ClientHandlerImpl(ApiMoviesConsoleLog logger,
-                             ClientParser clientParser,
+    public ClientHandlerImpl(ClientParser clientParser,
                              ImdbCommunication imdbCommunication,
-                             Socket clientSocket) {
-        this.logger = logger;
+                             ApiMoviesCustomLog logger) {
         this.clientParser = clientParser;
         this.imdbCommunication = imdbCommunication;
-        this.clientSocket = clientSocket;
+        this.logger = logger;
     }
-
-    @Inject
-    public void setClientSocket(Socket clientSocket){
-        this.clientSocket = clientSocket;
-    }
-
-    @Override
-    public void run() {
-        BufferedReader input = null;
-        PrintWriter output = null;
-        try {
-            output = new PrintWriter(clientSocket.getOutputStream(), true);
-            input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            this.proccessWhileReceiveMessage(input, output);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        } finally {
-            try {
-                if (output != null)
-                    output.close();
-                if (input != null)
-                    input.close();
-                clientSocket.close();
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-            }
-        }
-
-    }
-
 
     /**
-     * Execute the proccess
+     * Validate the query input, invoke the partner and send the response for the client.
      *
      * */
-    private void proccessWhileReceiveMessage(BufferedReader input, PrintWriter output) throws IOException {
+    public void processAndReply(Socket connection, BufferedReader input,
+                                 BufferedOutputStream output) throws IOException {
         String content = "";
         while ((content = input.readLine()) != null) {
-            logger.info("Sent from the client " + clientSocket.getInetAddress().getHostAddress() + " : " + content);
+            logger.info("Sent from the client " + connection.getInetAddress().getHostAddress() + " : '" + content + "'");
             try {
-                // validating input data
-                InputCommunicationValidate.inputValidate(content);
-                // identify query from input data
-                Optional<ApiMoviesRequest> optRequest = this.identifyRequest(content);
-                // call to the partner
-                Optional<ImdbResponse> optResponse = this.requestExternalPartner(optRequest);
-                // convert to response object format
-                content = this.parseExternalPartnerRespone(optResponse);
-                // validating output data
-                OutputCommunicationValidate.outputValidate(content);
-            } catch (ApiMoviesException ex){
-                // create error output
-                content = ex.getMessage().length() + String.valueOf(ApiMoviesConfig.getSeparator()) + ex.getMessage();
+                try {
+                    // validating input data
+                    InputCommunicationValidate.inputValidate(content);
+                    // identify query from input data
+                    Optional<ApiMoviesRequest> optRequest = this.identifyRequest(content);
+                    // call to the partner
+                    Optional<ImdbResponse> optResponse = this.requestExternalPartner(optRequest);
+                    // convert to response object format
+                    content = this.parseExternalPartnerRespone(optResponse);
+                    // validating output data
+                    OutputCommunicationValidate.outputValidate(content);
+                    // wait
+                    // Thread.sleep(3000);
+                } catch (ApiMoviesException ex) {
+                    logger.error("The content response will be a error message");
+                    content = ex.getMessage().length() + String.valueOf(ApiMoviesConfig.getSeparator()) + ex.getMessage();
+                }
+            } catch (Exception ex) {
+                logger.error(EnumApiMoviesException.FATAL_ERROR, ex.getMessage());
             }
-            logger.info("Sending response to " + clientSocket.getInetAddress().getHostAddress() + " : " + content);
-            output.println(content);
+            // send the content to client
+            logger.info("Sending response to " + connection.getInetAddress().getHostAddress() + " : " + content);
+            output.write((content + (char) 13 + (char) 10).getBytes());
+            output.flush();
         }
     }
 
@@ -107,7 +82,6 @@ public class ClientHandlerImpl implements ClientHandler {
             logger.error(EnumApiMoviesException.PARTNER_CALL_ERROR, "IS EMPTY");
             throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
         }
-        logger.info("Query : " + optRequest.get().toString());
         return optRequest;
     }
 
@@ -121,7 +95,6 @@ public class ClientHandlerImpl implements ClientHandler {
             logger.error(EnumApiMoviesException.PARTNER_MOVIE_NOT_FOUND, "MOVIE NOT FOUND");
             throw new ApiMoviesException(EnumApiMoviesException.PARTNER_MOVIE_NOT_FOUND);
         }
-        logger.info("External partner response : " + optResponse.get().toString());
         return optResponse;
     }
 
@@ -135,8 +108,6 @@ public class ClientHandlerImpl implements ClientHandler {
             logger.error(EnumApiMoviesException.PARTNER_CALL_ERROR, "IS EMPTY");
             throw new ApiMoviesException(EnumApiMoviesException.PARTNER_CALL_ERROR);
         }
-        logger.info("Response object : " + optApiMoviesResponse.get().toString());
-        // create output content
         return optApiMoviesResponse.get().getLength()
                 + String.valueOf(ApiMoviesConfig.getSeparator())
                 + optApiMoviesResponse.get().getContent();

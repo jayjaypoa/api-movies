@@ -5,6 +5,7 @@ plugins {
 group 'br.com.joacirjunior'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'idea'
 apply plugin : "java"
 ext {
     javaMainClass = "br.com.joacirjunior.apimovies.ApiMoviesApplication"

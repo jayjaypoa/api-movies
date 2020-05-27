@@ -5,7 +5,7 @@ import br.com.joacirjunior.apimovies.exception.ApiMoviesException;
 import br.com.joacirjunior.apimovies.external.imdb.communication.ImdbCommunication;
 import br.com.joacirjunior.apimovies.external.imdb.model.ImdbResponse;
 import br.com.joacirjunior.apimovies.external.imdb.parser.ImdbParser;
-import br.com.joacirjunior.apimovies.logger.ApiMoviesConsoleLog;
+import br.com.joacirjunior.apimovies.logger.ApiMoviesCustomLog;
 import br.com.joacirjunior.apimovies.util.ApiMoviesUtil;
 import com.google.inject.Inject;
 import org.jsoup.Connection;
@@ -21,11 +21,11 @@ public class ImdbCommunicationImpl implements ImdbCommunication {
     private static String IMDB_HOST = "https://www.imdb.com";
     private static String IMDB_URL_SEARCH = IMDB_HOST + "/find?q=$MOVIE_TITLE&s=tt&ref_=fn_al_tt_mr";
 
-    private ApiMoviesConsoleLog logger;
+    private ApiMoviesCustomLog logger;
     private ImdbParser imdbParser;
 
     @Inject
-    public ImdbCommunicationImpl(ApiMoviesConsoleLog logger, ImdbParser imdbParser) {
+    public ImdbCommunicationImpl(ApiMoviesCustomLog logger, ImdbParser imdbParser) {
         this.logger = logger;
         this.imdbParser = imdbParser;
     }

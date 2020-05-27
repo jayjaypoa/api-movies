@@ -1,19 +1,19 @@
 package br.com.joacirjunior.apimovies.logger.impl;
 
 import br.com.joacirjunior.apimovies.enumeration.EnumApiMoviesException;
-import br.com.joacirjunior.apimovies.logger.ApiMoviesConsoleLog;
+import br.com.joacirjunior.apimovies.logger.ApiMoviesCustomLog;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import java.util.logging.Logger;
 
 @Singleton
-public class ApiMoviesConsoleLogImpl implements ApiMoviesConsoleLog {
+public class ApiMoviesCustomLogImpl implements ApiMoviesCustomLog {
 
     private final Logger logger;
 
     @Inject
-    public ApiMoviesConsoleLogImpl(Logger logger) {
+    public ApiMoviesCustomLogImpl(Logger logger) {
         this.logger = logger;
     }
 

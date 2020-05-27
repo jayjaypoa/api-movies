@@ -2,8 +2,6 @@ package br.com.joacirjunior.apimovies.util;
 
 import br.com.joacirjunior.apimovies.enumeration.EnumApiMoviesException;
 import br.com.joacirjunior.apimovies.exception.ApiMoviesException;
-import br.com.joacirjunior.apimovies.logger.ApiMoviesConsoleLog;
-import com.google.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
