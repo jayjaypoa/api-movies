@@ -203,7 +203,7 @@ The test configuration applied is located at *../jmeter/Test Plan for api-movies
 ## 3.1 JMETER THREAD GROUP:
 JMeter Thread Group configuration with 20 threads:
 ![JMeter Thread Group](https://i.imgur.com/puXPKE0.png)
-<br>
+<br><br>
 ## 3.2 JMETER TEST:
 The JMeter Test component with Groovy language for call the server project.
 ![JMeter Test](https://i.imgur.com/m5qD7Hq.png)
@@ -223,12 +223,13 @@ if (sock.isConnected()) {
 }
 log.info("Finished");
 ```
-<br>
+
+<br><br>
 ## 3.3 VIEW RESULTS TREE:
-The View Results Tree with all the callers indicating sucess:
+The View Results Tree with all the callers indicating sucess.<br>
 ![View Results Tree](https://i.imgur.com/8BJT8HE.png)
 <br>
 ## 3.4 THE SERVER CONSOLE:
-For finish, the server's console result (with logback for better visualization):
-![Console](https://i.imgur.com/7wnMbkK.png)
+For finish, the server''s console result (with logback for better visualization).<br>
+![Console example](https://i.imgur.com/7wnMbkK.png)
 <br><br>
