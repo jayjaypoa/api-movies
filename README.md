@@ -11,6 +11,7 @@ The customer has requested a way to query for movie titles in [IMDB](https://www
 - [JSoup](https://jsoup.org/) (*version 1.3.1*)
 - [Log4J](https://logging.apache.org/log4j/2.x/) (*version 1.2.17*)
 - [JUnit](https://junit.org/) (*version 4.12*)
+- [JMeter](https://jmeter.apache.org/) (*version 5.2.1*)
 <br><br>
 #### 3. TECHNICAL DETAILS :
 - The IMDB's HTML is parsed with JSoup.
@@ -94,18 +95,18 @@ Output : 25:ERR-3002 - Invalid length
 ```
 
 ```text
-Input : null
-Output : 30:ERR-3004 - Separator not found
+Input : nulll
+Output : 37:ERR-3003 - Separator validation error
 ```
 
 ```text
 Input : \n
-Output : 30:ERR-3004 - Separator not found
+Output : 37:ERR-3003 - Separator validation error
 ```
 
 ```text
 Input : :::
-Output : 30:ERR-3004 - Separator not found
+Output : 37:ERR-3003 - Separator validation error
 ```
 
 ```text
@@ -120,22 +121,32 @@ Output : 26:ERR-5003 - Movie not found
 
 ```text
 Input : aaa:
-Output : 25:ERR-3002 - Invalid length
+Output : 37:ERR-3003 - Separator validation error
 ```
 
 ```text
 Input : 3:
-Output : 25:ERR-3002 - Invalid length
+Output : 37:ERR-3003 - Separator validation error
+```
+
+```text
+Input : ^[[H
+Output : 37:ERR-3003 - Separator validation error
 ```
 
 ```text
 Input : 5:12345
-Output : 150:1234\nBarney's 1-2-3-4 Seasons\n1234\nCoolio: 1 2 3 4 (Sumpin' New)\nFeist: 1234\nNY Man 1234\nFitz and the Tantrums: 123456\nBlessed Album: 1 2 3 4\n
+Output : 6365:12345\n1:23:45 Chernobyl\n1-2-3-4-5 Senses! Barney e Seus Amigos\n1234\n1,2,3,4,5,6 Get Out Alive with Bear Grylls\n1,2,3,4,5 Rainbow\n1 2 3 4 5 6 7 8\n1, 2, 3, 4, 5, 6, 7, 8 Mi adorada Malena\n1234\nEpisode #1.2345 One Life to Live\nEpisode #1.2345 Yeh Rishta Kya Kehlata Hai\nEpisode #1.2345 Shôten\nEpisode #1.2345 Unter uns\nEpisode #1.2345 Ventaneando\nEpisode #1.2345 Taarak Mehta Ka Ooltah Chashmah\nEpisode #1.2345 Loving\nEpisode #1.2345 The Edge of Night\nEpisode #1.2345 Ohayou Tokushima\nEpisode #1.2345 Neighbours\nEpisode #1.2345 Egoli: Place of Gold\nEpisode #1.2345 Home and Away\nEpisode #1.2345 Rannaghar\nEpisode #1.2345 Another World\nEpisode #1.2345 Aadade Aadharam\nEpisode #1.2345 Char Divas Sasuche\n1,2,3,4,5,6,7,8,9,10 Serious Amazon\nEpisode #1.2345 Rhythm City\nEpisode #1.2345 The Doctors\nEpisode #1.2345 Crossroads\nEpisode #1.2345 Kalimera zoi\nEpisode #1.2345 Marienhof\nEpisode #1.2345 One O'Clock News\nEpisode #1.2345 Coronation Street\nEpisode #1.2345 Le Bébête Show\nEpisode #1.2345 The Bold and the Beautiful\nEpisode #1.2345 Gute Zeiten, schlechte Zeiten\nEpisode #1.2345 Savdhaan India: Crime Alert\nEpisode #1.2345 Manasu Mamatha\nEpisode #1.2345 Six O'Clock News\nEpisode #1.2345 Jóban rosszban\nEpisode #1.2345 Hollyoaks\nEpisode #1.2345 Pierwsza milosc\nEpisode #1.2345 Days of Our Lives\nEpisode #1.2345 Verbotene Liebe\nEpisode #1.2345 Abhishekam\nEpisode #1.2345 Brookside\n12:34\n1234\n1, 2, 3, 4... A Bruxa Onilda\n1-2-3-4 Love in Progress\n1234 MisteRogers' Neighborhood\n1234\n1234 Plus belle la vie\n1,2,3,4 Hannah & Pete: Live in Leeds City Centre\nFolge 2345 Sesamstraße\nEpisode #1.12345 General Hospital\nEpisode #1.12345 Days of Our Lives\nEpisode #1.12345 The Guiding Light\nEpisode #1.12345 As the World Turns\nNY Man 1234\nFitz and the Tantrums: 123456\nFeist: 1234\nEpisode #23.45 Fox News Sunday\nEpisode #23.45 Nintama Rantarô\nEpisode #2.345 Thatteem Mutteem\nEpisode #23.45 Electric Playground\nEpisode #23.45 America's Most Wanted\nEpisode #23.45 Thuis\nEpisode #22.345 MSNBC Live\nEpisode #23.45 Extra\nEpisode #23.45 The Atheist Experience\nEpisode #23.45 The View\nEpisode #23.45 The Tonight Show Starring Johnny Carson\nEpisode #23.45 Hotel Cæsar\nEpisode #23.45 Countdown\nEpisode #23.45 This Week\nEpisode #23.45 Ros na Rún\nEpisode #2.345 Saravanan Meenatchi\nEpisode #23.45 Fair City\nEpisode #23.45 The New Price Is Right\nEpisode #23.45 Avanu Mathe Shravani\nEpisode #23.45 Top of the Pops\nEpisode #23.45 Dateline NBC\nEpisode #23.45 Siskel & Ebert & the Movies\nEpisode #23.45 Loose Women\nBarney's 1-2-3-4 Seasons\n2009 episode 1, 2, 3, 4, 5, 6, 7, 8, 9 &10 Floor Faber\n1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 La guerre des femmes\nLuim 1, 2, 3 & 4\nJacob1234\nFolge 1234 Sesamstraße\nMurmansk: 123.4\nEpisode #1.234 Las Zuquillo\nEpisode #1.234 Home Along da Riles\nEpisode #1.2342 The Edge of Night\nEpisode #1.2343 Unter uns\nEpisode #1.2340 Ventaneando\nEpisode #12.34 Thuis\nEpisode #1.2348 Marienhof\nEpisode #1.2349 Home and Away\nEpisode #1.234 Taynye znaki\nEpisode #1.234 Behenein\nEpisode #1.2347 Char Divas Sasuche\nEpisode #12.34 ITV Play of the Week\nEpisode #1.234 Ek Boond Ishq\nEpisode #1.234 Kumkum Bhagya\nEpisode #1.234 Anak Langit\nEpisode #1.234 Amigovios\nEpisode #1.234 Mann Ki Awaaz Pratigyaa\nEpisode #1.234 Jodha Akbar\nEpisode #1.234 Kesariya Balam Aavo Hamare Des\nEpisode #1.234 Ye Teri Galliyan\nEpisode #1.2343 Yeh Rishta Kya Kehlata Hai\nEpisode #1.234 Zabranena Lyubov\nEpisode #1.2344 Manasu Mamatha\nEpisode #1.234 Chellamay\nEpisode #1.2348 Shôten\nEpisode #11.234 The Mike Douglas Show\nEpisode #1.234 Meri Durga\nEpisode #1.234 Tujh Sang Preet Lagai Sajna\nEpisode #1.234 Basta't kasama kita\nEpisode #1.2346 Yeh Rishta Kya Kehlata Hai\nEpisode #1.234 Parasparam\nEpisode #1.234 Remix\nEpisode #1.234 The River\nEpisode #1.234 Rated K\nEpisode #1.234 Kriminalnaya Rossiya\nEpisode #1.234 Herzflimmern - Liebe zum Leben\nEpisode #1.234 Gata salvaje\nEpisode #12.34 Countdown\nEpisode #1.234 Labs ko si babes\nEpisode #1.234 Kirara: Ano ang kulay ng pag-ibig?\nEpisode #1.1234 Woh Rehne Waali Mehlon Ki\nEpisode #1.234 Walang tulugan with the Master Showman\nEpisode #1.2342 Neighbours\nEpisode #1.234 Mata Ki Chowki\nEpisode #1.2342 Taarak Mehta Ka Ooltah Chashmah\nEpisode #1.234 Irmãos Coragem\nEpisode #12.34 Flog It!\nEpisode #1.234 Tujhse Hai Raabta\nEpisode #12.34 Dlaczego ja?\nEpisode #1.234 Kadenang ginto\nEpisode #1.1234 Rhythm City\nEpisode #1.234 Rani Rashmoni\nEpisode #1.234 Tapur Tupur\nEpisode #1.1234 Kalimera zoi\nEpisode #1.234 El amor tiene cara de mujer\nEpisode #1.1234 Parasparam\nEpisode #1.2342 Yeh Rishta Kya Kehlata Hai\nEpisode #1.2340 Verbotene Liebe\nEpisode #1.1234 El secreto de Puente Viejo\nEpisode #1.234 Aahat\nEpisode #1.2340 Home and Away\nEpisode #1.234 Julia - Wege zum Glück\nEpisode #1.234 Ang probinsyano\nEpisode #1.2347 Rannaghar\nEpisode #1.2344 Savdhaan India: Crime Alert\nEpisode #1.2343 The Edge of Night\nEpisode #1.234 Begusarai\nEpisode #1.2346 Aadade Aadharam\nEpisode #1.2341 Egoli: Place of Gold\nEpisode #1.2346 Hollyoaks\nEpisode #1.2343 Le Bébête Show\nEpisode #12.34 Fashion News Live\nEpisode #1.2346 Days of Our Lives\nEpisode #1.234 Libertad condicionada\nEpisode #1.2341 Loving\nEpisode #1.1234 Egoli: Place of Gold\nEpisode #1.234 Gorodok\nEpisode #1.234 Harazat Tshnami\nEpisode #1.234 Zvaniy uzhin\nJérôme 50: 1, 2, 3, 4\nEpisode #1.234 Feitiço de Amor\nEpisode #1.234 Niram Maratha Pookal\nEpisode #12.34 The Atheist Experience\nEpisode #1.234 Principessa\nEpisode #1.1234 The Edge of Night\nEpisode #12.34 Burke's Backyard\nEpisode #1.234 Sana'y wala nang wakas\nEpisode #1.2344 Egoli: Place of Gold\nEpisode #1.2340 Kalimera zoi\nEpisode #1.234 Le Bébête Show\nEpisode #1.2348 Hollyoaks\nEpisode #1.234 Emmerdale Farm\nEpisode #12.34 My Wife's Girlfriends\nEpisode #1.234 O Direito de Nascer\nEpisode #1.234 Saraswatichandra\nEpisode #1.234 Kusum Dola\nEpisode #1.234 Parvarrish: Kuchh Khattee Kuchh Meethi\nEpisode #1.234 Mere Sai\nEpisode #1.234 Tekka Raja Badshah\nEpisode #1.234 Was gibt es Neues?\nEpisode #12.34 Bigg Boss\nEpisode #1.234 A Menina do Veleiro Azul\nEpisode #1.2341 Jóban rosszban\nEpisode #1.234 Zorra Total\nEpisode #1.234 To agana tulasi mun\nEpisode #1.2343 Six O'Clock News\nEpisode #1.234 Rainha das Flores\nEpisode #1.234 Kahiin To Hoga\n
 ```
 
 ```text
-Input : 15:A Grande Famlia
-Output : 160:A Grande Família\nUna grande famiglia - 20 anni prima\nA Grande Família: O Filme\nUna grande famiglia\nLa Grande Famille\nLa grande famille\nLa grande famille\n
+Input : 16:A Grande Familia
+Output : 2179:A Grande Família\nLa gran familia\nA Grande Família\nA Grande Família: O Filme\nLa familia y... uno más\nLong jia jiang\nA Grande Família Silva A Grande Família\nA Grande Família A Grande Família\nA Grande Familia Chapa Quente\nUna grande famiglia\nLa grande famille\nLa grande famille\nLa Grande Famille\nLa grande famille Workingirls\nLa grande famille C'est cool!\nUna grande famiglia Licia dolce Licia\nQué follón de familia\nA Grande Família Justiça A Grande Família\nLa grande famine de Mao La case du siècle\nLa grande famine En direct de notre passé\nUna grande famiglia - 20 anni prima\nReunión de familia\nCuestión de familia\nCuestión de familia Los especiales de ATC\nLa grande famille du cinéma Studio Bagel\nLa gran familia 7 vidas\n¿Agrandar la familia? Aquí Mando Yo\nO Natal da Grande Faminta A Grande Família\nGrandes Famílias, Pequenos Negócios A Grande Família\nA Grande Formatura Militar\nLa grande famille de l'aviation Trente-Six Chandelles\nLa grande famille des terriens Bibi et Geneviève\nComando negro: La gran familia\nBien de Familia, una película musical\nGrande família, sala nem tanto... Decora\nThe Wade Family: A Visit to Grandmother Television Club\nLeo Méndez, el jefe de familia Los Méndez\nCapacitación de jefas de familia\nLa plus grande famille du monde Les grands reportages\nAs Grandes Férias\nEl temor más grande de la familia Falco Casa de Muñecos\nLa gran familia española: Los procesos\nBonusfamiljen\nLa cicatrice, une famille dans la grande guerre La case de l'oncle Doc\nAs Aventuras da Família Robinson\nBelas Famílias\nGala 11: Expulsión de Raquel Bollo/Visita de familiares/Visita de Morat/Nominación Gran hermano VIP\nTrump to detain immigrant families indefinitely & is ISIS making a comeback? Watching the Hawks\nA Família do Setão\nA Grande Fuga\nUna grande famiglia\nGala 11: Expulsión de Ivonne Reyes/Nominación Aída, Aylén y Elettra/Visita de familiares Gran hermano VIP\nO Grande Homem\nLes grandes familles\nVolúpia do Poder\nBolshaya semya\nA Grande Remodelação A Minha Família\nGrandes Expectativas Familia Moderna\nGrandes Mudanças Médico de Família\nGrandes benvidas Libro de familia\nA Grande Família Screen Two\n
+```
+
+```text
+Input : 14:two and a half
+Output : 8517:Dois Homens e Meio\nDhaai Akshar Prem Ke\nTwo and a Half Men: Growing Up Harper\nTwo and a Half Men: Dying is Easy, Comedy is Hard\nTwo and a Half Maccs\nTwo-and-a-Half\nThe Women of Two and a Half Men\nHalbe Portionen\nDos angeles y medio\nTwo and a Half Aliens 2 Aliens\nTwo and a Half Deaths CSI: Investigação Criminal\nTwo and a half Ausländer Comedy Rocket\nTwo and a Half Hours\nTwo and a Half Men Infanity\nTwo and a Half Pilots LA to Vegas\nTwo and a half hours\nTwo and a Half Men Sobrenatural\nThe New Two and a Half Men The Bob Show\nTwo and a Half Men Just Seen It\nTwo and a Half Watchmen Electric Spoofaloo\nTwo and a Half Saiyans DragonShortZ\nTwo and a Half Iron Men Tvoovies\nTwo and a Half Lion Kings The RE(boot, vival, hash)-Cast\nThe Two and a Half Feathers Dad's Army\nThe Two and a Half Feathers The Dad's Army Podcast\nHalf-Life 2: Episode Two\nA Day in the Life of Two and a Half Men\nEgo and a half The Hyperreality\nKét félidö a pokolban\nHalf of Twenty Two\nDue imbroglioni e mezzo\nTwo Men Talking About Two and a Half Men\nRatings Plummet for 'Two and a Half Men'! The Celebrity Daily\nThe Buzz Identity/Two and a Half Man Mad\nHalf Mat, One Mat, Two and a Half Go of Rice Kozure ôkami\nTwo and a Half Babies/Anchor's Away Os Padrinhos Mágicos\nTwo Half Times to Hell\nTwo and No Half Men\nTwo N a Half Mice\nTwo Half Men Package Deal\nJerry O'Connell Auditions for Two and a Half Men\nCrazy Apple/Agent Two and Half Kelly's Kountry Junction\nThe Denial Show: Charlie Sheen & Two and a Half Men The Denial Show\nKnockout Special: Two Punches for $2,500!/Half Price for Half a Driveway! Judge Judy\nTake Two Aspirins and Half a Pint of Porpoise Milk A Feiticeira\nHalf Past Two: Smile Like You Mean It\nHalf Past Two: See You Again\nHalf Past Two: So Cal Summer\nHot Health Headlines/"Two and a Half Men" Star Jon Cryer/Actress Freida Pinto The Meredith Vieira Show\nJon Cryer on the Final Season of "Two and a Half Men". Plus, from "Gone Girl" and "Marry Me", Casey Wilson The Queen Latifah Show\nBonecas Explosivas\nThe Manster\nHalf Way to Hell\nPeople Magazine Is Bringing Us Two Incredible Stories From Their "Half Their Size" Issue! We're Meeting an Incredible Man Rachael Ray\nDeux jours et demi\nHalf the Picture Screen Two\nIT Chapter Two Half in the Bag\nThe Two Finger Rule Dois Homens e Meio\nThe Two Murderers Hancock's Half Hour\nNangnangnangnang Dois Homens e Meio\nVagabond on the Half Shell Under Two Bridges\nThe Lawyer Two N a Half Mice\nPilot Dois Homens e Meio\nThe Silhouette Two N a Half Mice\nFour Balls, Two Bats and One Mitt Dois Homens e Meio\nBehind the Scenes: Season Two Half Cut Tea\nWeekend in Bangkok with Two Olympic Gymnasts Dois Homens e Meio\nThis Unblessed Biscuit Dois Homens e Meio\nThe 'Ocu' or the 'Pado'? Dois Homens e Meio\nSlowly and in a Circular Fashion Dois Homens e Meio\nArguments for the Quickie Dois Homens e Meio\nProstitutes and Gelato Dois Homens e Meio\nMy Bodacious Vidalia Dois Homens e Meio\nGorp. Fnark. Schmegle. Dois Homens e Meio\nJust Like Buffalo Dois Homens e Meio\nIs There a Mrs. Waffles? Dois Homens e Meio\nSanta's Village of the Damned Dois Homens e Meio\n818-jklpuzo Dois Homens e Meio\nThe War Against Gingivitis Dois Homens e Meio\nApologies for the Frivolity Dois Homens e Meio\nAbove Exalted Cyclops Dois Homens e Meio\nA Bottle of Wine and a Jackhammer Dois Homens e Meio\nLookin' for Japanese Subs Dois Homens e Meio\nFrodo's Headshots Dois Homens e Meio\nNot in My Mouth! Dois Homens e Meio\nThe Party Hat Two N a Half Mice\nCows, Prepare to Be Tipped Dois Homens e Meio\nMeander to Your Dander Dois Homens e Meio\nPalmdale, Ech Dois Homens e Meio\nThe Soil is Moist Dois Homens e Meio\nTazed in the Lady Nuts Dois Homens e Meio\nInflatable Annie Two N a Half Mice\nWho's Vod Kanockers Dois Homens e Meio\nThe Squat and the Hover Dois Homens e Meio\nMy Damn Stalker Dois Homens e Meio\nCrude and Uncalled For Dois Homens e Meio\nOne Nut Johnson Dois Homens e Meio\nMr. McGlue's Feedbag Dois Homens e Meio\nThe Crazy Bitch Gazette Dois Homens e Meio\nFrankenstein and the Horny Villagers Dois Homens e Meio\nHumiliation Is a Visual Medium Dois Homens e Meio\nA Jock Strap in Hell Dois Homens e Meio\nA Sympathetic Crotch to Cry On Dois Homens e Meio\nIt Never Rains in Hooterville Dois Homens e Meio\nThe Mouse Trap Two N a Half Mice\nWorking for Caligula Dois Homens e Meio\nA Possum on Chemo Dois Homens e Meio\nFish in a Drawer Dois Homens e Meio\nErgo, the Booty Call Dois Homens e Meio\nThe Mooch at the Boo Dois Homens e Meio\nHookers, Hookers, Hookers Dois Homens e Meio\nWaiting for the Right Snapper Dois Homens e Meio\nA Lung Full of Alan Dois Homens e Meio\nCastrating Sheep in Montana Dois Homens e Meio\nSmell the Umbrella Stand Dois Homens e Meio\nSmooth as a Ken Doll Dois Homens e Meio\nGlamping in a Yurt Dois Homens e Meio\nIxnay on the Oggie Day Dois Homens e Meio\nA Pot Smoking Monkey Dois Homens e Meio\nWarning, It's Dirty Dois Homens e Meio\nPhase One, Complete Dois Homens e Meio\nIt Was Mame, Mom Dois Homens e Meio\nKinda Like Necrophilia Dois Homens e Meio\nThat Special Tug Dois Homens e Meio\nJerry's Date Two N a Half Mice\nMerry Thanksgiving Dois Homens e Meio\nNo Sniffing, No Wowing Dois Homens e Meio\nGumby with a Pokey Dois Homens e Meio\nAnd the Plot Moistens Dois Homens e Meio\nThe Sea Is a Harsh Mistress Dois Homens e Meio\nThat Darn Priest Dois Homens e Meio\nThank You for the Intercourse Dois Homens e Meio\nCity of Great Racks Dois Homens e Meio\nA Chic Bar in Ibiza Dois Homens e Meio\nGrandma's Pie Dois Homens e Meio\nFor Whom the Booty Calls Dois Homens e Meio\nFor the Sake of the Child Dois Homens e Meio\nOontz. Oontz. Oontz. Dois Homens e Meio\nPaint It, Pierce It or Plug It Dois Homens e Meio\nBaseball Was Better with Steroids Dois Homens e Meio\nYay, No Polyps Dois Homens e Meio\nSomething Salted and Twisted Dois Homens e Meio\nBig Flappy Bastards Dois Homens e Meio\nWelcome to Alancrest Dois Homens e Meio\nFerrets, Attack! Dois Homens e Meio\nKissing Abraham Lincoln Dois Homens e Meio\nCamel Filters and Pheromones Dois Homens e Meio\nThis Is Not Gonna End Well Dois Homens e Meio\nThe Flavin' and the Mavin' Dois Homens e Meio\nA Big Bag of Dog Dois Homens e Meio\nUntainted by Filth Dois Homens e Meio\nPinocchio's Mouth Dois Homens e Meio\nWalnuts and Demerol Dois Homens e Meio\nPie Hole, Herb Dois Homens e Meio\nAvoid the Chinese Mustard Dois Homens e Meio\nTucked, Taped and Gorgeous Dois Homens e Meio\nThank God for Scoliosis Dois Homens e Meio\nWelcome Home, Jake Dois Homens e Meio\nSpringtime on a Stick Dois Homens e Meio\nTinkle Like a Princess Dois Homens e Meio\nThat Was Saliva, Alan Dois Homens e Meio\nRelease the Dogs Dois Homens e Meio\nThe Devil's Lube Dois Homens e Meio\nA Bag Full of Jawea Dois Homens e Meio\nThe Ol' Mexican Spinach Dois Homens e Meio\nYes, Monsignor Dois Homens e Meio\nMmm, Fish. Yum. Dois Homens e Meio\nNine Magic Fingers Dois Homens e Meio\nMy Tongue Is Meat Dois Homens e Meio\nWest Side Story Dois Homens e Meio\nSips, Sonnets and Sodomy Dois Homens e Meio\nIce Cold Two N a Half Mice\nThe Unfortunate Little Schnauzer Dois Homens e Meio\nTwo Outta Three Ain't Bad Half Mile of Hell\nThing One, Thing Two Half Minute Horror\nWhich of These Two Ladies Is He Married To? Half Hour Story\nThirty-Eight, Sixty-Two, Thirty-Eight Dois Homens e Meio\nZejdz z Zmoich Wlosów Dois Homens e Meio\nDave Learns That JR is His Half-Brother Tayong dalawa\nI Think You Offended Don Dois Homens e Meio\nCorey's Been Dead for an Hour Dois Homens e Meio\nLotta Delis in Little Armenia Dois Homens e Meio\nThe Straw in My Donut Hole Dois Homens e Meio\nHere I Come, Pants! Dois Homens e Meio\nI Think I Banged Lucille Ball Dois Homens e Meio\nBest H.O. Money Can Buy Dois Homens e Meio\nA Kosher Slaughterhouse Out in Fontana Dois Homens e Meio\nDead from the Waist Down Dois Homens e Meio\nShe'll Still Be Dead at Halftime Dois Homens e Meio\nA Giant Cat Holding a Churro Dois Homens e Meio\nAlways a Bridesmaid, Never a Burro Dois Homens e Meio\nThree Hookers and a Philly Cheesesteak Dois Homens e Meio\nOw, Ow, Don't Stop Dois Homens e Meio\nPeople Who Love Peepholes Dois Homens e Meio\nThat's Summer Sausage, Not Salami Dois Homens e Meio\nThat Pistol-Packin' Hermaphrodite Dois Homens e Meio\nYou Do Know What the Lollipop Is For Dois Homens e Meio\nLove Isn't Blind, It's Retarded Dois Homens e Meio\nThat's Not What They Call It in Amsterdam Dois Homens e Meio\nThe Spit-Covered Cobbler Dois Homens e Meio\n
 ```
 
 ```text
@@ -152,6 +163,8 @@ This task compiles, tests, and assembles the code into a JAR file. You can run i
 ```
 After a few seconds, "BUILD SUCCESSFUL" indicates that the build has completed.
 The jar file will be generated at *\<project\>/build/libs/*
+<br>
+![Gradlew Build Example](https://i.imgur.com/AKLr9SB.png)
 <br>
 ##### 9.2. HOW RUN THE PROJECT :
 You can run it like this:
@@ -181,3 +194,41 @@ THE ONLY OBJECTIVE IS CALL THE SERVER PROJECT (api-movies-server).
 ## 2. TELNET
 #### 2.1 EXAMPLE:
 ![Telnet Example](https://i.imgur.com/TJ4F29z.png)
+<br><br>
+
+# 3. JMETER
+At below, somes multithreading test with JMeter.<br>
+The test configuration applied is located at *../jmeter/Test Plan for api-movies-server.jmx*
+<br>
+## 3.1 JMETER THREAD GROUP:
+JMeter Thread Group configuration with 20 threads:
+![JMeter Thread Group](https://i.imgur.com/puXPKE0.png)
+<br>
+## 3.2 JMETER TEST:
+The JMeter Test component with Groovy language for call the server project.
+![JMeter Test](https://i.imgur.com/m5qD7Hq.png)
+The source (Groovy) :
+```groovy
+def sock = new Socket()
+sock.setSoTimeout(4000)
+sock.connect(new InetSocketAddress("127.0.0.1", 32000))
+if (sock.isConnected()) {
+	log.info('Connection established')
+	sock.withStreams { inStream, outStream ->
+		def reader = inStream.newReader()
+		outStream << "13:The Godfather"		
+	}
+} else {
+	log.info('Server is not listening')
+}
+log.info("Finished");
+```
+<br>
+## 3.3 VIEW RESULTS TREE:
+The View Results Tree with all the callers indicating sucess:
+![View Results Tree](https://i.imgur.com/8BJT8HE.png)
+<br>
+## 3.4 THE SERVER CONSOLE:
+For finish, the server's console result (with logback for better visualization):
+![Console](https://i.imgur.com/7wnMbkK.png)
+<br><br>
